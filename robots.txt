@@ -1,0 +1,4 @@
+User-agent:*
+Disallow:
+
+Sitemap: https://qstx.github.io/sitemap.xml
