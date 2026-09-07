@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "scope": "shared",
+  "resources": [
+    {
+      "path": "models/CoordinateArrow.glb",
+      "kind": "model",
+      "purpose": "Three.js 坐标轴箭头",
+      "source": "user-generated",
+      "license": "not-applicable (author-owned)",
+      "attribution": "QSTX",
+      "bytes": 6712
+    }
+  ]
+}
