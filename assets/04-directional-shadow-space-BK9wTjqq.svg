@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+  <title id="title">方向光正交阴影空间与体素 Bias 示意图</title>
+  <desc id="desc">一个世界空间体素立方体投影到方向光的正交 Shadow Depth，区分采样位置的 Normal/Sun Bias、阴影写入的 Raster Depth Bias 和 blocker-only 几何。</desc>
+  <defs>
+    <marker id="arrow-light" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#d97706"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#7c3aed"/>
+    </marker>
+    <style>
+      .label { font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; font-size: 20px; fill: #1f2937; }
+      .small { font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; font-size: 16px; fill: #374151; }
+      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; font-size: 27px; font-weight: 700; fill: #111827; }
+      .visible { stroke: #334155; stroke-width: 3; fill: none; }
+      .hidden { stroke: #64748b; stroke-width: 2.5; stroke-dasharray: 9 8; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1100" height="650" fill="#ffffff"/>
+  <text x="40" y="48" class="title">方向光正交阴影空间：表面体素、Bias 与 Blocker-only</text>
+
+  <!-- Directional light rays: parallel by construction. -->
+  <g stroke="#d97706" stroke-width="3" marker-end="url(#arrow-light)" opacity="0.95">
+    <line x1="80" y1="90" x2="260" y2="185"/>
+    <line x1="240" y1="90" x2="420" y2="185"/>
+    <line x1="400" y1="90" x2="580" y2="185"/>
+    <line x1="560" y1="90" x2="740" y2="185"/>
+  </g>
+  <text x="62" y="78" class="label" fill="#b45309">Directional Light（平行光线）</text>
+
+  <!-- World-space voxel bounds, visible edges solid and hidden edges dashed. -->
+  <g>
+    <!-- hidden/back square -->
+    <path d="M330 160 L690 160 L690 410 L330 410 Z" class="hidden"/>
+    <!-- hidden depth edges -->
+    <path d="M200 230 L330 160 M560 230 L690 160 M560 480 L690 410 M200 480 L330 410" class="hidden"/>
+    <!-- visible/front square -->
+    <path d="M200 230 L560 230 L560 480 L200 480 Z" class="visible"/>
+    <!-- visible connectors -->
+    <path d="M200 230 L330 160 M560 230 L690 160 M560 480 L690 410" class="visible"/>
+    <text x="280" y="535" class="label">World-space Voxelization Bounds</text>
+    <text x="286" y="560" class="small">实线：可见边　虚线：隐藏边</text>
+  </g>
+
+  <!-- Surface voxel -->
+  <g>
+    <polygon points="440,282 500,258 500,318 440,342" fill="#f59e0b" opacity="0.88" stroke="#92400e" stroke-width="2"/>
+    <polygon points="440,282 468,266 528,290 500,318" fill="#fbbf24" opacity="0.92" stroke="#92400e" stroke-width="2"/>
+    <polygon points="500,318 528,290 528,350 500,378" fill="#d97706" opacity="0.88" stroke="#92400e" stroke-width="2"/>
+    <text x="452" y="400" class="small" fill="#92400e">表面体素</text>
+  </g>
+
+  <!-- Direct-lighting sample-position bias -->
+  <g fill="none" stroke-width="3">
+    <line x1="480" y1="300" x2="480" y2="220" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+    <line x1="480" y1="300" x2="414" y2="265" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+  </g>
+  <text x="490" y="220" class="small" fill="#1d4ed8">Normal Bias：移动采样点</text>
+  <text x="280" y="255" class="small" fill="#6d28d9">Sun Bias：沿光线移动采样点</text>
+
+  <!-- Blocker-only object -->
+  <g>
+    <rect x="600" y="292" width="58" height="58" rx="6" fill="#8b5cf6" opacity="0.85" stroke="#5b21b6" stroke-width="2"/>
+    <path d="M600 292 L620 278 L678 278 L658 292 Z" fill="#a78bfa" stroke="#5b21b6" stroke-width="2"/>
+    <path d="M658 292 L678 278 L678 336 L658 350 Z" fill="#6d28d9" stroke="#5b21b6" stroke-width="2"/>
+    <text x="690" y="303" class="label" fill="#5b21b6">Blocker-only</text>
+    <text x="690" y="329" class="small">只写 Opacity / ShadowDepth</text>
+    <text x="690" y="352" class="small">不写 Albedo、Normal、Emissive</text>
+  </g>
+
+  <!-- Orthographic shadow camera / depth target -->
+  <g>
+    <path d="M840 170 L1010 170 L1010 430 L840 430 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/>
+    <path d="M870 205 L980 205 L980 395 L870 395 Z" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+    <line x1="820" y1="300" x2="840" y2="300" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <text x="850" y="470" class="label" fill="#1d4ed8">Orthographic Shadow Space</text>
+    <text x="884" y="497" class="small">ShadowDepth（Depth32）</text>
+    <text x="864" y="525" class="small">WorldToShadow → (u, v, d)</text>
+    <text x="755" y="552" class="small">写入阶段：Raster Depth Bias = (1, 2.5)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(55 600)">
+    <line x1="0" y1="0" x2="55" y2="0" class="visible"/>
+    <text x="68" y="6" class="small">可见立方体边</text>
+    <line x1="190" y1="0" x2="245" y2="0" class="hidden"/>
+    <text x="258" y="6" class="small">隐藏立方体边</text>
+    <rect x="420" y="-12" width="24" height="24" fill="#f59e0b" stroke="#92400e"/>
+    <text x="456" y="6" class="small">表面体素</text>
+    <rect x="575" y="-12" width="24" height="24" fill="#8b5cf6" stroke="#5b21b6"/>
+    <text x="611" y="6" class="small">Blocker-only</text>
+  </g>
+</svg>
